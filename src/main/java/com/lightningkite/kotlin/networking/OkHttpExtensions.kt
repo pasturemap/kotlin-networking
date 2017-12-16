@@ -20,6 +20,7 @@ import java.lang.reflect.Type
  */
 
 val defaultClient = OkHttpClient()
+const val MAX_BUFFER_SIZE = 524288L // 0.5Mb
 
 fun Response.getKotlinHeaders(): List<Pair<String, String>> {
     val headers = headers()
@@ -127,13 +128,13 @@ fun Request.Builder.lambdaDownload(client: OkHttpClient = defaultClient, downloa
 }
 
 inline fun <reified T : Any> Request.Builder.lambdaGson(client: OkHttpClient = defaultClient) = lambda<T>(client) {
-    val str = it.body()?.string() ?: ""
-    println(str)
+    val body = it.peekBody(MAX_BUFFER_SIZE)
+    val str = body.string() ?: ""
     MyGson.gson.fromJson<T>(str)
 }
 
 inline fun <reified T : Any> Request.Builder.lambdaGson(client: OkHttpClient = defaultClient, type: Type) = lambda<T>(client) {
-    val str = it.body()?.string() ?: ""
-    println(str)
+    val body = it.peekBody(MAX_BUFFER_SIZE)
+    val str = body.string() ?: ""
     MyGson.gson.fromJson<T>(str, type)
 }
