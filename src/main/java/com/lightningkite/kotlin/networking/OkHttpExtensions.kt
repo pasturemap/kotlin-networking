@@ -128,13 +128,19 @@ fun Request.Builder.lambdaDownload(client: OkHttpClient = defaultClient, downloa
 }
 
 inline fun <reified T : Any> Request.Builder.lambdaGson(client: OkHttpClient = defaultClient) = lambda<T>(client) {
-    val body = it.peekBody(MAX_BUFFER_SIZE)
-    val str = body.string() ?: ""
+    val str = try {
+        it.body()?.string() ?: ""
+    } catch (e: Exception) {
+        ""
+    }
     MyGson.gson.fromJson<T>(str)
 }
 
 inline fun <reified T : Any> Request.Builder.lambdaGson(client: OkHttpClient = defaultClient, type: Type) = lambda<T>(client) {
-    val body = it.peekBody(MAX_BUFFER_SIZE)
-    val str = body.string() ?: ""
+    val str = try {
+        it.body()?.string() ?: ""
+    } catch (e: Exception) {
+        ""
+    }
     MyGson.gson.fromJson<T>(str, type)
 }
