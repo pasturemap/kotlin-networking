@@ -18,4 +18,12 @@ interface OkHttpApi {
         }
         return builder
     }
+
+    fun requestBuilderBase(absoluteUrl: String): Request.Builder {
+        val builder = Request.Builder().url(absoluteUrl)
+        for (header in headers) {
+            builder.header(header.first, header.second)
+        }
+        return builder
+    }
 }
