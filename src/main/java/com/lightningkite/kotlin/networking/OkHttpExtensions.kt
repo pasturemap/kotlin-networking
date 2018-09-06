@@ -33,7 +33,7 @@ fun Response.getKotlinHeaders(): List<Pair<String, String>> {
 
 fun <T : Any> T.gsonToRequestBody(gson: Gson = MyGson.gson): RequestBody = object : RequestBody() {
     override fun contentType(): MediaType = MediaTypes.JSON!!
-    val string = this@gsonToRequestBody.gsonToString()
+    val string = gson.toJson(this@gsonToRequestBody)
     val bytes = string.toByteArray()
     override fun contentLength(): Long = bytes.size.toLong()
     override fun writeTo(sink: BufferedSink) {
