@@ -12,6 +12,7 @@ import okio.Source
 import java.io.File
 import java.io.InputStream
 import java.lang.reflect.Type
+import java.util.concurrent.TimeUnit
 
 /**
  *
@@ -19,7 +20,10 @@ import java.lang.reflect.Type
  *
  */
 
-val defaultClient = OkHttpClient()
+val defaultClient = OkHttpClient.Builder()
+        .readTimeout(30L, TimeUnit.SECONDS)
+        .connectTimeout(30L, TimeUnit.SECONDS)
+        .build()
 const val MAX_BUFFER_SIZE = 524288L // 0.5Mb
 
 fun Response.getKotlinHeaders(): List<Pair<String, String>> {
